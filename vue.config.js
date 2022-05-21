@@ -27,6 +27,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
+  // 当process.env.NODE_ENV为production时为生产环境，为development时为开发环境
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
@@ -35,6 +36,16 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    // 代理跨域
+    proxy: {
+      // 当我们的本地的请求 有/api的时候，就会代理我们的请求地址向另外一个服务器发出请求
+      '/api': {
+        target: 'http://ihrm.itheima.net/',
+        //  这个值只有为true才代表跨域
+        changeOrigin: true
+
+      }
     }
 
   },
