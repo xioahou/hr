@@ -49,8 +49,10 @@ service.interceptors.response.use(response => {
     // 当等于10002时表示后端后端返回token超时
     store.dispatch('user/logout')
     router.push('/login')
+  } else {
+    Message.error(error.message) // 提示错误信息
   }
-  Message.error(error.message) // 提示错误信息
+
   return Promise.reject(error) // 返回执行错误，让当前的执行连跳出，直接进入catch
 })
 // 判断token是否过期
