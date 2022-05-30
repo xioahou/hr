@@ -16,7 +16,6 @@
           ref="username"
           v-model="loginForm.mobile"
           placeholder="请输入手机号"
-          name="username"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -38,39 +37,46 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
-        <!-- native - 主要是给自定义的组件添加原生事件 -->
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" class="loginBtn" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button
+        class="loginBtn"
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">账号: 13800000002</span>
         <span> 密码: 123456</span>
       </div>
+
     </el-form>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
-
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data() {
     // 手机号校验规则，上方导入
     const validateUsername = (rule, value, callback) => {
-      validUsername(value) ? callback : callback(new Error('手机号格式错误'))
+      validUsername(value) ? callback() : callback(new Error('手机号格式错误'))
     }
     return {
       loginForm: {
-        mobile: '',
-        password: ''
+        mobile: '13800000002',
+        password: '123456'
       },
       loginRules: {
-        mobile: [{ required: true, trigger: 'blur', message: '手机号不能为空' }, { validator: validateUsername, trigger: 'blur' }],
+        mobile: [{ required: true, trigger: 'blur', message: '手机号不能为空' },
+          { validator: validateUsername, trigger: 'blur' }],
         password: [{ required: true, trigger: 'blur' }, {
           min: 6, max: 12, message: '密码长度必须大于6小于12', trigger: 'blur'
         }]
@@ -89,6 +95,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['user/login']), // 引入方法
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -100,18 +107,27 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+      // 表单自定义验证
+      console.log(123)
+      console.log(this.$refs.loginForm)
+      this.$refs.loginForm.validate(async(isOk) => {
+        //   isOk是布尔值
+        console.log('isOk')
+        if (isOk) {
+          try {
+            this.loading = true
+            // 只有校验通过了  我们才能去调用action
+            await this['user/login'](this.loginForm)
+            // 登陆成功之后
+            // async 标记的函数是 pormise对象
+            this.$router.push('/')
+          } catch (error) {
+            console.log(error)
+            this.$message('登陆失败,请重新尝试')
+          } finally {
+            //  不论执行 try 还是 catch  都是钱关闭转圈
             this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+          }
         }
       })
     }

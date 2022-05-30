@@ -1,21 +1,26 @@
 import request from '@/utils/request'
 
+//  登录请求接口
 export function login(data) {
   return request({
+    method: 'POST',
     url: '/sys/login',
-    method: 'post',
     data
   })
 }
-
-export function getInfo(token) {
+// 获取用户资料
+export function getUserInfo() {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: '/sys/profile',
+    method: 'post'
   })
 }
-
+// 获取用户头像
+export function getUserImg(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
+}
 export function logout() {
   return request({
     url: '/vue-admin-template/user/logout',
