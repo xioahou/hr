@@ -8,10 +8,10 @@ const service = axios.create({
   // 当执行npm run dev=》.evn.development=>/api=>跨域代理
   // 当执行npm run dev=>/api     当执行npm run build=》/prod-api
   baseURL: process.env.VUE_APP_BASE_API,
-  timeout: 3600 // 定义五秒超时
+  timeout: 5000 // 定义五秒超时
 })
 // 定义token存放时间变量z
-const timeout = 2
+const timeout = 3600
 // 请求拦截器
 service.interceptors.request.use(config => {
   if (store.getters.token) {
@@ -34,6 +34,8 @@ service.interceptors.response.use(response => {
   // 响应成功
 
   const { success, message, data } = response.data
+  console.log('响应拦截器success')
+  console.log(success)
   // 判断success
   if (success) {
     return data
