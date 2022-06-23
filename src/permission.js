@@ -16,7 +16,6 @@ router.beforeEach(async(to, from, next) => {
       next('/') // 跳到主页
     } else {
       if (!store.getters.userId) {
-        console.log('测试')
         await store.dispatch('user/getUserInfo')
       }
       next() // 直接放行

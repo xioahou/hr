@@ -53,7 +53,11 @@ export default {
     operateDepts(command) {
       if (command === 'dele') {
         // 删除
-        this.$confirm('你确定要删除该组织部门吗').then(
+        this.$confirm('你确定要删除该组织部门吗', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
           // 如果点击确认就会进入then
           () => {
             return DeleteDepartments(this.treeNode.id) // 返回Promise对象

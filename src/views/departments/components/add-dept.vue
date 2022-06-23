@@ -134,9 +134,11 @@ export default {
           if (this.formData.id) {
             // 修改部门
             await commitEdit(this.formData)
+            this.$message.success('修改成功')
           } else {
             // 新增部门
             await addDepartments({ ...this.formData, pid: this.treeNode.id })
+            this.$message.success('添加部门成功')
           }
           // 父组件传值
           this.$emit('addDepts')

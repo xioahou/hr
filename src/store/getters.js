@@ -8,6 +8,8 @@ const getters = {
   // 建立映射用id
   userId: state => state.user.userInfo.userId,
   // 建立用户头像快捷访问
-  staffPhoto: state => state.user.userInfo.staffPhoto
+  staffPhoto: state => state.user.userInfo.staffPhoto,
+  // 建立对公司id访问
+  companyId: state => state.user.userInfo.companyId
 }
 export default getters
