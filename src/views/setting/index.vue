@@ -171,12 +171,14 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        // alert(12345)
         // 调用删除接口
         await deleteRole(id)
-        // console.log('删除成功过')
         this.m_roleList()
         this.$message.success('删除成功')
+        if (this.list.length === 1) {
+          this.page.page -= 1
+          this.m_roleList()
+        }
       } catch (error) {
         console.log('取消了')
       }

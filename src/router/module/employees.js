@@ -1,6 +1,7 @@
 // 导出靠请路由规则
 import Layout from '@/layout'
 import employees from '@/views/employees'
+import detailed from '@/views/employees/detailed.vue'
 export default {
   // 路由规则
   path: '/employees',
@@ -14,5 +15,14 @@ export default {
       title: '员工', // 因为左侧导航栏要用title
       icon: 'people'
     }
-  }]
+  }, {
+    path: 'detailed/:id',
+    component: detailed,
+    hidden: true,
+    meta: {
+      title: '员工详细'
+    }
+  }
+
+  ]
 }

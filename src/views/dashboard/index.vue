@@ -1,19 +1,28 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <UploadExcel />
   </div>
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex'
+// 引入组件
+// import pageTools from '@/components/pageTools'
 
 export default {
   name: 'Dashboard',
+
+  // components: {
+  //   pageTools
+  // },
   computed: {
     ...mapGetters([
       'name'
     ])
   }
+
 }
 </script>
 
