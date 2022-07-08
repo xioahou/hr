@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <uploadImg ref="roleImg" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,6 +90,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <uploadImg ref="rolePict" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -368,19 +369,38 @@ export default {
     // 获取信息
     async m_getUserImg() {
       this.userInfo = await getUserImg(this.userId)
+      // 如果在保存的时候没有上传图片则获取的时候要去空格，要不然会有惊喜
+      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
+        this.$refs.roleImg.fileList = [{ url: this.userInfo.staffPhoto, upload: true }]
+      }
     },
     // 保存更新
     async saveUser() {
-      await saveUserDetailById(this.userInfo)
+      // 读取头像
+      const fileList = this.$refs.roleImg.fileList
+      if (fileList.some(item => !item.upload)) {
+        this.$message.warning('头像还未上传完成')
+        return
+      }
+      // 先扩展this.userInfo 然后再将staffPhoto层叠掉
+      await saveUserDetailById({ ...this.userInfo, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存信息成功')
     },
     // 获取基本信息
     async m_getPersonalDetail() {
       this.formData = await getPersonalDetail(this.userId)
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
+        this.$refs.rolePict.fileList = [{ url: this.formData.staffPhoto, upload: true }]
+      }
     },
     // 更新基本信息
     async savePersonal() {
-      await updatePersonal(this.formData)
+      const fileList = this.$refs.rolePict.fileList
+      if (fileList.some(item => !item.upload)) {
+        this.$message.warning('头像还未上传完成')
+        return
+      }
+      await updatePersonal({ ...this.formData, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
       this.$message.success('更新用户信息成功')
     }
   }

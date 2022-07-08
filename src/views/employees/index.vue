@@ -17,6 +17,12 @@
         <el-table v-loading="loading" border :data="list">
           <el-table-column label="序号" sortable="" type="index" />
           <el-table-column label="姓名" sortable="" prop="username" />
+          <!-- 头像插槽 -->
+          <el-table-column label="头像">
+            <template v-slot="{row}">
+              <img v-imagerror="require('@/assets/common/head.jpg')" :src="row.staffPhoto" alt="" style="border-radius:50%;width:50px;height:50px;" @click="showQcode(row.staffPhoto)">
+            </template>
+          </el-table-column>
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formatEmployess" />
           <el-table-column label="部门" sortable="" prop="departmentName" />
@@ -50,6 +56,12 @@
     </div>
     <!-- 传值的语法糖 -->
     <addEmployees :show-dialog.sync="showDialog" />
+    <!-- 二维码 -->
+    <el-dialog title="扫码查看头像" :visible.sync="dialogVisible">
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
   </div>
 
 </template>
@@ -59,6 +71,7 @@ import employees from '@/api/constant/employees'
 import { formatDate } from '@/filters'
 import { employeesList, deleRole } from '@/api/employees'
 import addEmployees from './components/add-employees'
+import Qrcode from 'qrcode'
 
 export default {
   name: 'EmployessIndex',
@@ -74,7 +87,8 @@ export default {
         total: 0
       },
       loading: true,
-      showDialog: false
+      showDialog: false,
+      dialogVisible: false
     }
   },
   created() {
@@ -158,6 +172,16 @@ export default {
           return item[headers[key]]
         })
       })
+    },
+    showQcode(url) {
+      if (url) {
+        this.dialogVisible = true
+        this.$nextTick(() => {
+          Qrcode.toCanvas(this.$refs.myCanvas, url)
+        })
+      } else {
+        this.$message.error('用户还未上传对象')
+      }
     }
   }
 }

@@ -20,6 +20,7 @@ import * as filters from '@/filters'
 console.log(directives)
 
 // 将对象化为数组
+console.log(Object.keys(directives))
 Object.keys(directives).forEach(item => {
   // console.log(directives)
   // console.log(directives[item])

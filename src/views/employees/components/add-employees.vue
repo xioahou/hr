@@ -16,6 +16,7 @@
 
         </el-select>
       </el-form-item>
+
       <el-form-item label="工号" prop="workNumber">
         <el-input v-model="formData.workNumber" style="width:50%" placeholder="请输入工号" />
       </el-form-item>
