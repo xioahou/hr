@@ -86,4 +86,11 @@ export function updateJob(data) {
     data
   })
 }
-
+// 分配权限
+export function assignRoot(data) {
+  return request({
+    url: '/sys/user/assignRoles',
+    method: 'put',
+    data
+  })
+}

@@ -1,5 +1,6 @@
 import { getToken, setToken, removeToken, setTimestamp } from '@/utils/auth'
 import { login, getUserInfo, getUserImg } from '@/api/user'
+import { resetRouter } from '@/router'
 
 // 状态
 const state = {
@@ -48,11 +49,16 @@ const actions = {
     const merge = { ...result, ...resultphoto }
     console.log(result)
     context.commit('setuserInfo', merge)
+    return result
   },
   // 退出登录
   logout(context) {
     context.commit('removeToken')
     context.commit('removeuserInfo')
+    resetRouter()// 重置路由
+    // 加了命名空间的context指的不是子模块
+    // 子模块调用字=子模块需要在第三个参数传递{root:tue}
+    context.commit('permission/setRoutes', [], { root: true })// 修改动态路由为空
   }
 }
 

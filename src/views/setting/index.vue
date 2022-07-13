@@ -38,7 +38,7 @@
               >
                 <!-- slot-scope可以获取到 row, column, $index 和 store（table 内部的状态管理）的数据 -->
                 <template slot-scope="{row}">
-                  <el-button type="success" size="small">分配权限</el-button>
+                  <el-button type="success" size="small" @click="dealRoot(row.id)">分配权限</el-button>
                   <el-button type="primary" size="small" @click="m_roleDetail(row.id)">编辑</el-button>
                   <el-button type="danger" size="small" @click="m_deleteRole(row.id)">删除</el-button>
                 </template>
@@ -107,18 +107,32 @@
 
       </el-row>
     </el-dialog>
+    <!-- 分配权限弹层 -->
+    <el-dialog :visible.sync="dialogVisible" title="分配权限" @close="btnCancel">
+      <el-tree ref="tree" :data="listRoot" :props="defaultProps" :default-expand-all="true" :show-checkbox="true" :check-strictly="true" node-key="id" :default-checked-keys="keyId" />
+
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" @click="rootBtn">确定</el-button>
+          <el-button @click=" btnCancel">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { roleList, EnterpriseInquiries, deleteRole, roleDetail, updateRole, addRole } from '@/api/setting'
+import { roleList, EnterpriseInquiries, deleteRole, roleDetail, updateRole, addRole, grantRoot } from '@/api/setting'
 import { mapGetters } from 'vuex'
+import { getPermissionList } from '@/api/permisson'
+import { tranListToTreeDate } from '@/utils'
 export default {
   name: 'SettingIndex',
   data() {
     return {
       activeName: 'first',
       list: [],
+      keyId: [], // 这里并不是数据双向绑定的，也就是说我的视图并不会随着数据的更新而更新，而element的tree组件是采用赋值的方式进行改变是否勾选。
       page: {
         // 当前页码
         page: 1,
@@ -132,7 +146,15 @@ export default {
         name: '',
         description: ''
       },
-      rules: { name: [{ required: true, message: '必填项', trigger: 'blur' }] }
+      rules: { name: [{ required: true, message: '必填项', trigger: 'blur' }] },
+      dialogVisible: false,
+      listRoot: [],
+      defaultProps: {
+
+        label: 'name'
+      },
+      roleId: null
+
     }
   },
   computed: {
@@ -212,6 +234,26 @@ export default {
       this.ruleForm = {}
       this.isShowdig = false
       this.$refs.ruleForm.resetFields()
+    },
+    // 分配权限
+    async  dealRoot(id) {
+      this.listRoot = tranListToTreeDate(await getPermissionList(), '0')
+      const { permIds } = await roleDetail(id)
+      this.keyId = permIds
+      this.dialogVisible = true
+      this.roleId = id
+    },
+    async rootBtn() {
+      await grantRoot({ permIds: this.$refs.tree.getCheckedKeys(), id: this.roleId })
+      this.dialogVisible = false
+      // console.log(this.$refs.tree.getCheckedKeys())
+    },
+    btnCancel() {
+      this.dialogVisible = false
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys([])
+      })
+      // this.keyId = []
     }
   }
 }

@@ -15,7 +15,7 @@
               <i class="el-icon-arrow-down" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+              <el-dropdown-item command="add" :disabled="!checkPermission('add-perm')">添加子部门</el-dropdown-item>
               <el-dropdown-item v-if="!isLoot" command="edit">编辑部门</el-dropdown-item>
               <el-dropdown-item v-if="!isLoot" command="dele">删除部门</el-dropdown-item>
             </el-dropdown-menu>

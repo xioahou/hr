@@ -16,7 +16,16 @@ router.beforeEach(async(to, from, next) => {
       next('/') // 跳到主页
     } else {
       if (!store.getters.userId) {
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        console.log(roles)
+        console.log(roles.menus)
+        // async返回的函数直接用await就可以
+        const res = await store.dispatch('permission/filterRouter', roles.menus)
+        // res就是筛选出来的动态路由
+        // addRoutes是router的实例
+        router.addRoutes([...res, { path: '*', redirect: '/404', hidden: true }])
+        // 这块有个缺陷，使用addRouters必须使用next(to.path)重新跳转一下
+        next(to.path)
       }
       next() // 直接放行
     }

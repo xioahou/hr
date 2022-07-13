@@ -38,7 +38,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="deitRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="m_deleRole(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -62,6 +62,8 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <!-- 角色 -->
+    <assignRole ref="assRole" :isdialog.sync="showdialog" :user-id="userId" />
   </div>
 
 </template>
@@ -71,12 +73,14 @@ import employees from '@/api/constant/employees'
 import { formatDate } from '@/filters'
 import { employeesList, deleRole } from '@/api/employees'
 import addEmployees from './components/add-employees'
+import assignRole from './components/assign-role.vue'
 import Qrcode from 'qrcode'
 
 export default {
   name: 'EmployessIndex',
   components: {
-    addEmployees
+    addEmployees,
+    assignRole
   },
   data() {
     return {
@@ -88,7 +92,9 @@ export default {
       },
       loading: true,
       showDialog: false,
-      dialogVisible: false
+      dialogVisible: false,
+      showdialog: false,
+      userId: null
     }
   },
   created() {
@@ -182,7 +188,13 @@ export default {
       } else {
         this.$message.error('用户还未上传对象')
       }
+    },
+    async deitRole(id) {
+      this.userId = id
+      await this.$refs.assRole.m_getUserImg(id)
+      this.showdialog = true
     }
+
   }
 }
 </script>

@@ -11,6 +11,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
+import checkPermission from '@/mixin/checkPermission'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -38,7 +39,8 @@ Vue.config.productionTip = false
 // 引入全局组件
 import component from '@/components'
 Vue.use(component)
-
+// 注册全局Mixin
+Vue.mixin(checkPermission)
 new Vue({
   el: '#app',
   router,
