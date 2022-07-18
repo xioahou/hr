@@ -47,7 +47,7 @@ const actions = {
     const resultphoto = await getUserImg(result.userId)
     // 合并接口数据
     const merge = { ...result, ...resultphoto }
-    console.log(result)
+    console.log(merge)
     context.commit('setuserInfo', merge)
     return result
   },

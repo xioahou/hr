@@ -9,6 +9,7 @@ import attendancesRouter from './module/attendances.js'
 import salarysRouter from './module/salarys.js'
 import settingRouter from './module/setting.js'
 import socialRouter from './module/social.js'
+import userRouter from './module/user'
 Vue.use(Router)
 
 /* Layout */
@@ -57,7 +58,7 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
@@ -71,7 +72,8 @@ export const constantRoutes = [
       component: () => import('@/views/import')
     }]
 
-  }
+  },
+  userRouter
   // 404 page must be placed at the end !!!
 
 ]
@@ -86,9 +88,10 @@ export const asyncRoutes = [
   socialRouter
 ]
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   // 合并路由
+  base: 'hr/',
   routes: [...constantRoutes]
 })
 

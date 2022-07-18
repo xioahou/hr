@@ -23,6 +23,7 @@
               <img v-imagerror="require('@/assets/common/head.jpg')" :src="row.staffPhoto" alt="" style="border-radius:50%;width:50px;height:50px;" @click="showQcode(row.staffPhoto)">
             </template>
           </el-table-column>
+          <el-table-column label="手机号" sortable="" prop="mobile" />
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formatEmployess" />
           <el-table-column label="部门" sortable="" prop="departmentName" />

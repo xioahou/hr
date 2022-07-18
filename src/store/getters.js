@@ -4,6 +4,8 @@ const getters = {
   // 建立token快捷访问
   token: state => state.user.token,
   // 建立用户资料用户名
+  user: state => state.user.userInfo,
+  // 建立用户资料用户名
   name: state => state.user.userInfo.username,
   // 建立用户资料用户名
   userInfo: state => state.user.userInfo.username,
